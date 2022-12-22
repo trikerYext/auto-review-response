@@ -1,4 +1,4 @@
 {
-    "$id": "autoRespondToReviews_reviewAutoResponse",
+    "$id": "reviewsAutomaticResponse_reviewAutoResponse",
     "$schema": "https://schema.yext.com/config/platform/plugin/v1"
 }
