@@ -8,6 +8,10 @@ export interface Comment {
     visibility: string;
 }
 
+export interface ReviewLabel {
+    id: number;
+    name: string;
+}
 export interface ReviewWebhook {
     review : {
         id: number;
@@ -17,6 +21,7 @@ export interface ReviewWebhook {
         entityId: string;
         authorName: string;
         comments: Comment[];
+        reviewLabels: ReviewLabel[];
     },
     meta: {
         uuid: string;
@@ -24,6 +29,5 @@ export interface ReviewWebhook {
         accountId: string;
         appSpecificAccountId: string;
         eventType: string;
-    };
+    }
 }
-
