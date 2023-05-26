@@ -17,7 +17,7 @@ export async function reviewAutoRespond(webhook: any) {
       const response = await fetch(request).then(response => response.json());
       // Filter assets by review labels
       const reviewLabelNames = webhook_payload.review.reviewLabels?.map((label) => label.name);
-      const reviewLabelAssets = response.response.assets.filter(asset => asset.labels.some(label => reviewLabelNames?.includes(label)));
+      const reviewLabelAssets = response.response.assets.filter(asset => asset.labels?.some(label => reviewLabelNames?.includes(label)));
       // Find assets with "autoresponse" usage and store their values in review response array
       const reviewResponseArray: string[] = [];
       reviewLabelAssets.forEach(asset => {
