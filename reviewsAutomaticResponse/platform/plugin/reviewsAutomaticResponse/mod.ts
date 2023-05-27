@@ -8,7 +8,7 @@ export async function reviewAutoRespond(webhook: any) {
     // Process Webhook
     const webhook_payload: ReviewWebhook = webhook;
     // Make a call to the Assets:List endpoint
-    const request = new Request (`https://api.yextapis.com/v2/accounts/me/assets?v=20230401&api_key=${API_KEY}`, {
+    const request = new Request (`https://api.yextapis.com/v2/accounts/me/assets?v=20230401&limit=999&api_key=${API_KEY}`, {
       method: 'GET',  
       headers: {
       "content-type": "application/json",
