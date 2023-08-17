@@ -7,6 +7,20 @@ const delay = (ms: number | undefined) => new Promise((res) => setTimeout(res, m
 export async function reviewAutoRespond(webhook: any) {
     // Process Webhook
     const webhook_payload: ReviewWebhook = webhook;
+    // Store Review Id
+    const reviewId = webhook_payload.review.id; 
+    // Sleep Function for 25 Seconds
+    await delay(25000);
+    // Make a call to the Review: Get endpoint with id from the webhook payload
+    const reviewRequest = new Request (`https://api.yextapis.com/v2/accounts/me/reviews/${reviewId}?v=20230401&api_key=${API_KEY}`, {
+      method: 'GET',  
+      headers: {
+      "content-type": "application/json",
+      },
+      });
+      const review_response = await fetch(reviewRequest).then(response => response.json());
+      console.log(review_response)
+
     // Make a call to the Assets:List endpoint
     const request = new Request (`https://api.yextapis.com/v2/accounts/me/assets?v=20230401&limit=999&api_key=${API_KEY}`, {
       method: 'GET',  
@@ -16,7 +30,8 @@ export async function reviewAutoRespond(webhook: any) {
       });
       const response = await fetch(request).then(response => response.json());
       // Filter assets by review labels
-      const reviewLabelNames = webhook_payload.review.reviewLabels?.map((label) => label.name);
+      const reviewLabelNames = review_response.response.reviewLabels?.map((label) => label.name);
+      console.log(reviewLabelNames);
       const reviewLabelAssets = response.response.assets.filter(asset => asset.labels?.some(label => reviewLabelNames?.includes(label)));
       // Find assets with "autoresponse" usage and store their values in review response array
       const reviewResponseArray: string[] = [];
@@ -25,18 +40,18 @@ export async function reviewAutoRespond(webhook: any) {
               reviewResponseArray.push(asset.value);
           }
       });
+      console.log(reviewResponseArray)
       // Choose a review response asset at random
       const reviewResponse = reviewResponseArray[Math.floor(Math.random() * reviewResponseArray.length)];
-      console.log(reviewResponseArray)
+      console.log(reviewResponse)
       // Check the following conditions:
       //// Review is new
       //// There are no previous comments
       if (webhook_payload.meta.eventType === 'REVIEW_CREATED' && webhook_payload.review.comments.length === 0){
-          console.log(reviewLabelNames);
           // Exit if review has content and user doesn't want to respond to reviews with content
                 console.log("Attempting to post...");
-                // Wait 10s to avoid race condition
-                await delay(10000);
+                // Wait 2s to avoid race condition
+                // await delay(2000);
                 // Post response via API
                 await respondViaApi(webhook_payload.review.id, reviewResponse);
             }
@@ -54,9 +69,8 @@ export async function respondViaApi(review_id: number, review_response: any) {
       },
     });
     const response_json = await response.json();
-    console.log(response_json);
+    // console.log(response_json);
   } catch (error) {
-    console.log('here');
-    console.log(error);
+    // console.log(error);
   }
 }
