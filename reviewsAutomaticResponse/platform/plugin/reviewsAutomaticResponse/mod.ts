@@ -10,7 +10,7 @@ export async function reviewAutoRespond(webhook: any) {
     // Store Review Id
     const reviewId = webhook_payload.review.id; 
     // Sleep Function for 15 Seconds
-    await delay(15000);
+    await delay(20000);
     // Make a call to the Review: Get endpoint with id from the webhook payload
     const reviewRequest = new Request (`https://api.yextapis.com/v2/accounts/me/reviews/${reviewId}?v=20230401&api_key=${API_KEY}`, {
       method: 'GET',  
